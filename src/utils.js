@@ -8,9 +8,9 @@
  * @param {Object} src
  * @return {boolean}
  */
-export const matches = (obj) => (src) => {
-    return Object.keys(obj).every((k) => obj[k] === src[k]);
-};
+export const matches = obj => src => {
+  return Object.keys(obj).every(k => obj[k] === src[k])
+}
 
 /**
  * A helper function to create a collection that can query objects based on
@@ -19,16 +19,16 @@ export const matches = (obj) => (src) => {
  * @return {Object} the collection API
  */
 export const createCollection = (list = []) => ({
-    get(key) {
-        return key ? list.find(matches(key)) : list;
-    },
-    insert(key) {
-        return (list = list.concat(key)).slice(-1).pop();
-    },
-    getOrInsert(key) {
-        return this.get(key) || this.insert(key);
-    },
-    remove(key) {
-        return list.splice(list.findIndex(matches(key)), 1).pop();
-    }
-});
+  get(key) {
+    return key ? list.find(matches(key)) : list
+  },
+  insert(key) {
+    return (list = list.concat(key)).slice(-1).pop()
+  },
+  getOrInsert(key) {
+    return this.get(key) || this.insert(key)
+  },
+  remove(key) {
+    return list.splice(list.findIndex(matches(key)), 1).pop()
+  }
+})
