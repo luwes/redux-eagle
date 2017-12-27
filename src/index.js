@@ -1,12 +1,12 @@
-import { createCollection } from './utils'
+import { createCollection, defaultCompare, defaultTransform } from './utils'
 
 const WATCH = '@@observer/WATCH'
 const UNWATCH = '@@observer/UNWATCH'
 
-export function watch(store, selectors, listener) {
+export function watch(store, selectors, listener, compare = defaultCompare) {
   return store.dispatch({
     type: WATCH,
-    payload: { selectors, listener }
+    payload: { selectors, listener, compare }
   })
 }
 
@@ -17,34 +17,27 @@ export function unwatch(store, selectors, listener) {
   })
 }
 
-export function createObserver(...selectorTransforms) {
+export function createObserver(selectorTransform = defaultTransform) {
   const subscribers = createCollection()
 
   function mapSelectors(selectors, fn) {
     selectors = [].concat(selectors)
-    return selectors.map(selector =>
-      fn(
-        selectorTransforms.reduce(
-          (acc, transform) => transform(selector),
-          selector
-        )
-      )
-    )
+    return selectors.map(selector => fn(selectorTransform(selector)))
   }
 
   return store => nextDispatch => action => {
     switch (action.type) {
       case WATCH: {
-        let { selectors, listener } = action.payload
-        return mapSelectors(selectors, selector => {
-          return subscribers.getOrInsert({ selector, listener })
-        })
+        let { selectors, listener, compare } = action.payload
+        return mapSelectors(selectors, selector =>
+          subscribers.getOrInsert({ selector, listener, compare })
+        )
       }
       case UNWATCH: {
         let { selectors, listener } = action.payload
-        return mapSelectors(selectors, selector => {
-          return subscribers.remove({ selector, listener })
-        })
+        return mapSelectors(selectors, selector =>
+          subscribers.remove({ selector, listener })
+        )
       }
       default: {
         const prevState = store.getState()
@@ -53,11 +46,11 @@ export function createObserver(...selectorTransforms) {
 
         const list = subscribers.get()
         for (let i = 0; i < list.length; i++) {
-          const { selector, listener } = list[i]
+          const { selector, listener, compare } = list[i]
           const prev = selector(prevState)
           const next = selector(nextState)
-          if (prev !== next) {
-            listener(next, nextState)
+          if (!compare(prev, next)) {
+            listener(next, prev, nextState)
           }
         }
 

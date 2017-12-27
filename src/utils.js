@@ -1,4 +1,16 @@
-// todo: replace find and findIndex
+/**
+ * Default compare function
+ * @param  {*} a
+ * @param  {*} b
+ * @return {boolean}
+ */
+export function defaultCompare(a, b) {
+  return a === b
+}
+
+export function defaultTransform(selector) {
+  return selector
+}
 
 /**
  * Creates a function that performs a partial deep comparison between a given
