@@ -20,7 +20,7 @@ export const matches = obj => src => {
  */
 export const createCollection = (list = []) => ({
   get(key) {
-    return key ? list.find(matches(key)) : list
+    return key ? find(list, matches(key)) : list
   },
   insert(key) {
     return (list = list.concat(key)).slice(-1).pop()
@@ -29,6 +29,18 @@ export const createCollection = (list = []) => ({
     return this.get(key) || this.insert(key)
   },
   remove(key) {
-    return list.splice(list.findIndex(matches(key)), 1).pop()
+    return list.splice(findIndex(list, matches(key)), 1).pop()
   }
 })
+
+function findIndex(list, predicate) {
+  for (let i = 0; i < list.length; i++) {
+    if (predicate(list[i])) {
+      return i;
+    }
+  }
+}
+
+function find(list, predicate) {
+  return list[findIndex(list, predicate)];
+}
