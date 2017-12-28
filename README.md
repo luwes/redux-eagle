@@ -5,6 +5,12 @@
 
 Redux middleware to watch state changes using transformable selectors.
 
+## Install
+
+```
+npm i --save redux-eagle
+```
+
 ## Usage
 
 ```js
