@@ -1,6 +1,6 @@
 {
   "name": "redux-eagle",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Redux middleware to watch state changes using transformable selectors.",
   "main": "lib/redux-eagle.js",
   "module": "es/redux-eagle.js",
