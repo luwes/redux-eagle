@@ -11,7 +11,9 @@ Redux middleware to watch state changes using transformable selectors.
 npm i --save redux-eagle
 ```
 
-## Usage
+## Example
+
+##### basic example
 
 ```js
 import { createStore, applyMiddleware } from 'redux'
@@ -20,7 +22,7 @@ import { createEagle, watch, unwatch } from 'redux-eagle'
 const eagle = createEagle()
 const store = createStore(reducer, applyMiddleware(eagle))
 
-watch(store, (state) => state.desert.mice, catchMouse)
+store.dispatch(watch((state) => state.desert.mice, catchMouse))
 
 function catchMouse(livingMouse, deadMouse, state) {
   console.log(livingMouse)
