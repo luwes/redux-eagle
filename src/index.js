@@ -3,18 +3,18 @@ import { createCollection, defaultCompare, defaultTransform } from './utils'
 const WATCH = '@@eagle/WATCH'
 const UNWATCH = '@@eagle/UNWATCH'
 
-export function watch(store, selectors, listener, compare = defaultCompare) {
-  return store.dispatch({
+export function watch(selectors, listener, compare = defaultCompare) {
+  return {
     type: WATCH,
     payload: { selectors, listener, compare }
-  })
+  }
 }
 
-export function unwatch(store, selectors, listener) {
-  return store.dispatch({
+export function unwatch(selectors, listener) {
+  return {
     type: UNWATCH,
     payload: { selectors, listener }
-  })
+  }
 }
 
 export function createEagle(selectorTransform = defaultTransform) {

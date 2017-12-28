@@ -15,7 +15,7 @@ describe('Index', () => {
       const store = createStore(reducers.todos, applyMiddleware(eagle))
 
       const listener = jest.fn()
-      watch(store, identity, listener)
+      store.dispatch(watch(identity, listener))
       store.dispatch(addTodo('foo'))
       expect(listener.mock.calls.length).toBe(1)
     })
@@ -26,9 +26,9 @@ describe('Index', () => {
 
       const selectPaused = state => state.ui.video.paused
       const listener = jest.fn()
-      watch(store, selectPaused, listener)
-      watch(store, selectPaused, listener)
-      watch(store, selectPaused, listener)
+      store.dispatch(watch(selectPaused, listener))
+      store.dispatch(watch(selectPaused, listener))
+      store.dispatch(watch(selectPaused, listener))
       store.dispatch(play())
       expect(listener.mock.calls.length).toBe(1)
     })
@@ -38,8 +38,8 @@ describe('Index', () => {
       const store = createStore(reducers.todos, applyMiddleware(eagle))
 
       const listener = jest.fn()
-      watch(store, identity, listener)
-      unwatch(store, identity, listener)
+      store.dispatch(watch(identity, listener))
+      store.dispatch(unwatch(identity, listener))
       store.dispatch(addTodo('foo'))
       expect(listener.mock.calls.length).toBe(0)
     })
