@@ -45,7 +45,7 @@ describe('Index', () => {
     })
 
     it('transforms the selector and fires on changes', () => {
-      const objectpath = (path) => (state) => get(state, path)
+      const objectpath = path => state => get(state, path)
       const eagle = createEagle(objectpath)
       const store = createStore(reducers.player, applyMiddleware(eagle))
       const actions = bindActionCreators({ watch, play }, store.dispatch)
@@ -57,10 +57,13 @@ describe('Index', () => {
     })
 
     it('unwatch removes the transformed selector', () => {
-      const objectpath = (path) => (state) => get(state, path)
+      const objectpath = path => state => get(state, path)
       const eagle = createEagle(objectpath)
       const store = createStore(reducers.player, applyMiddleware(eagle))
-      const actions = bindActionCreators({ watch, unwatch, play }, store.dispatch)
+      const actions = bindActionCreators(
+        { watch, unwatch, play },
+        store.dispatch
+      )
 
       const listener = jest.fn()
       actions.watch('ui.video.paused', listener)
