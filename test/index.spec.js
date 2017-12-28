@@ -1,5 +1,5 @@
-import { identity } from 'lodash'
-import { createStore, applyMiddleware } from 'redux'
+import { identity, get } from 'lodash'
+import { createStore, applyMiddleware, bindActionCreators } from 'redux'
 import { createEagle, watch, unwatch } from '../'
 import { addTodo, play } from './helpers/actionCreators'
 import * as reducers from './helpers/reducers'
@@ -41,6 +41,31 @@ describe('Index', () => {
       store.dispatch(watch(identity, listener))
       store.dispatch(unwatch(identity, listener))
       store.dispatch(addTodo('foo'))
+      expect(listener.mock.calls.length).toBe(0)
+    })
+
+    it('transforms the selector and fires on changes', () => {
+      const objectpath = (path) => (state) => get(state, path)
+      const eagle = createEagle(objectpath)
+      const store = createStore(reducers.player, applyMiddleware(eagle))
+      const actions = bindActionCreators({ watch, play }, store.dispatch)
+
+      const listener = jest.fn()
+      actions.watch('ui.video.paused', listener)
+      actions.play()
+      expect(listener.mock.calls.length).toBe(1)
+    })
+
+    it('unwatch removes the transformed selector', () => {
+      const objectpath = (path) => (state) => get(state, path)
+      const eagle = createEagle(objectpath)
+      const store = createStore(reducers.player, applyMiddleware(eagle))
+      const actions = bindActionCreators({ watch, unwatch, play }, store.dispatch)
+
+      const listener = jest.fn()
+      actions.watch('ui.video.paused', listener)
+      actions.unwatch('ui.video.paused', listener)
+      actions.play()
       expect(listener.mock.calls.length).toBe(0)
     })
   })

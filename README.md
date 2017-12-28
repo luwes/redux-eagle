@@ -30,3 +30,24 @@ function catchMouse(livingMouse, deadMouse, state) {
 
 store.dispatch(mouseEnterDesert())
 ```
+
+##### example w/ transformed selector
+
+```js
+import { createStore, applyMiddleware, bindActionCreators } from 'redux'
+import { createEagle, watch } from 'redux-eagle'
+
+const objectpath = (path) => (state) => get(state, path)
+const eagle = createEagle(objectpath)
+const store = createStore(reducer, applyMiddleware(eagle))
+const actions = bindActionCreators({ watch, mouseEnterDesert }, store.dispatch)
+
+actions.watch('state.desert.mice', catchMouse)
+
+function catchMouse(livingMouse, deadMouse, state) {
+  console.log(livingMouse)
+}
+
+actions.mouseEnterDesert()
+```
+
