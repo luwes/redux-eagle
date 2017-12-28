@@ -1,7 +1,7 @@
 import { createCollection, defaultCompare, defaultTransform } from './utils'
 
-const WATCH = '@@observer/WATCH'
-const UNWATCH = '@@observer/UNWATCH'
+const WATCH = '@@eagle/WATCH'
+const UNWATCH = '@@eagle/UNWATCH'
 
 export function watch(store, selectors, listener, compare = defaultCompare) {
   return store.dispatch({
@@ -17,12 +17,15 @@ export function unwatch(store, selectors, listener) {
   })
 }
 
-export function createObserver(selectorTransform = defaultTransform) {
+export function createEagle(selectorTransform = defaultTransform) {
   const subscribers = createCollection()
 
   function mapSelectors(selectors, fn) {
     selectors = [].concat(selectors)
-    return selectors.map(selector => fn(selectorTransform(selector)))
+    return selectors.map(selector => {
+      selector = selectorTransform(selector)
+      return fn(selector)
+    })
   }
 
   return store => nextDispatch => action => {
@@ -60,6 +63,6 @@ export function createObserver(selectorTransform = defaultTransform) {
   }
 }
 
-// export default function observer(store) {
-//     return createObserver()(store);
+// export default function eagle(store) {
+//     return createEagle()(store);
 // }

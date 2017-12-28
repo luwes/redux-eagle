@@ -8,6 +8,12 @@ export function defaultCompare(a, b) {
   return a === b
 }
 
+/**
+ * Default selector transform function. This can be useful to convert string
+ * based selectors into selector functions.
+ * @param  {*} selector
+ * @return {Function}
+ */
 export function defaultTransform(selector) {
   return selector
 }
@@ -48,11 +54,11 @@ export const createCollection = (list = []) => ({
 function findIndex(list, predicate) {
   for (let i = 0; i < list.length; i++) {
     if (predicate(list[i])) {
-      return i;
+      return i
     }
   }
 }
 
 function find(list, predicate) {
-  return list[findIndex(list, predicate)];
+  return list[findIndex(list, predicate)]
 }

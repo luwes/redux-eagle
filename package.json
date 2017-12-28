@@ -1,9 +1,9 @@
 {
-  "name": "redux-observer",
+  "name": "redux-eagle",
   "version": "1.0.0",
   "description": "Redux middleware to watch state changes using transformable selectors.",
-  "main": "lib/redux-observer.js",
-  "module": "es/redux-observer.js",
+  "main": "lib/redux-eagle.js",
+  "module": "es/redux-eagle.js",
   "scripts": {
     "clean": "rimraf lib dist es coverage",
     "format": "prettier --write '{src,test}/**/*.js'",
@@ -13,14 +13,14 @@
     "test": "cross-env BABEL_ENV=commonjs jest",
     "test:watch": "npm test -- --watch",
     "test:cov": "npm test -- --coverage",
-    "build:commonjs": "cross-env NODE_ENV=cjs rollup -c -o lib/redux-observer.js",
-    "build:es": "cross-env BABEL_ENV=es NODE_ENV=es rollup -c -o es/redux-observer.js",
-    "build:umd": "cross-env BABEL_ENV=es NODE_ENV=development rollup -c -o dist/redux-observer.js",
-    "build:umd:min": "cross-env BABEL_ENV=es NODE_ENV=production rollup -c -o dist/redux-observer.min.js",
+    "build:commonjs": "cross-env NODE_ENV=cjs rollup -c -o lib/redux-eagle.js",
+    "build:es": "cross-env BABEL_ENV=es NODE_ENV=es rollup -c -o es/redux-eagle.js",
+    "build:umd": "cross-env BABEL_ENV=es NODE_ENV=development rollup -c -o dist/redux-eagle.js",
+    "build:umd:min": "cross-env BABEL_ENV=es NODE_ENV=production rollup -c -o dist/redux-eagle.min.js",
     "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "prepare": "npm run clean && npm run format:check && npm run lint && npm test && npm run build"
   },
-  "repository": "https://github.com/luwes/redux-observer",
+  "repository": "https://github.com/luwes/redux-eagle",
   "author": "Wesley Luyten <me@wesleyluyten.com> (https://github.com/luwes)",
   "license": "MIT",
   "devDependencies": {

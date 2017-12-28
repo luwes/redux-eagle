@@ -1,18 +1,18 @@
 import { identity } from 'lodash'
 import { createStore, applyMiddleware } from 'redux'
-import { createObserver, watch, unwatch } from '../'
+import { createEagle, watch, unwatch } from '../'
 import { addTodo, play } from './helpers/actionCreators'
 import * as reducers from './helpers/reducers'
 
 describe('Index', () => {
-  describe('createObserver', () => {
+  describe('createEagle', () => {
     it('returns a function', () => {
-      expect(createObserver()).toBeInstanceOf(Function)
+      expect(createEagle()).toBeInstanceOf(Function)
     })
 
     it('calls the listener when state changes', () => {
-      const observer = createObserver()
-      const store = createStore(reducers.todos, applyMiddleware(observer))
+      const eagle = createEagle()
+      const store = createStore(reducers.todos, applyMiddleware(eagle))
 
       const listener = jest.fn()
       watch(store, identity, listener)
@@ -21,10 +21,10 @@ describe('Index', () => {
     })
 
     it('discards multiple identical state listeners', () => {
-      const observer = createObserver()
-      const store = createStore(reducers.player, applyMiddleware(observer))
+      const eagle = createEagle()
+      const store = createStore(reducers.player, applyMiddleware(eagle))
 
-      const selectPaused = (state) => state.ui.video.paused
+      const selectPaused = state => state.ui.video.paused
       const listener = jest.fn()
       watch(store, selectPaused, listener)
       watch(store, selectPaused, listener)
@@ -34,8 +34,8 @@ describe('Index', () => {
     })
 
     it('unwatch removes the listener', () => {
-      const observer = createObserver()
-      const store = createStore(reducers.todos, applyMiddleware(observer))
+      const eagle = createEagle()
+      const store = createStore(reducers.todos, applyMiddleware(eagle))
 
       const listener = jest.fn()
       watch(store, identity, listener)
@@ -43,6 +43,5 @@ describe('Index', () => {
       store.dispatch(addTodo('foo'))
       expect(listener.mock.calls.length).toBe(0)
     })
-
   })
 })

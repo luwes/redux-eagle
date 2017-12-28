@@ -18,7 +18,7 @@ if (env === 'es' || env === 'cjs') {
 
 if (env === 'development' || env === 'production') {
   config.output = { format: 'umd' }
-  config.name = 'ReduxObserver'
+  config.name = 'ReduxEagle'
   config.plugins.push(
     nodeResolve({
       jsnext: true
