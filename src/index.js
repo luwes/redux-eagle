@@ -1,53 +1,38 @@
-import { createCollection, defaultCompare, defaultTransform } from './utils'
+import { createCollection, defaultCompare } from './utils'
 
 const WATCH = '@@eagle/WATCH'
 const UNWATCH = '@@eagle/UNWATCH'
 
 export function watch(selectors, listener, compare = defaultCompare) {
-  let payload = { selectors, listener, compare }
-  let partial = createPartial(WATCH, payload)
-  return listener ? partial(listener, compare) : partial
+  return {
+    type: WATCH,
+    payload: { selectors, listener, compare }
+  }
 }
 
 export function unwatch(selectors, listener) {
-  let payload = { selectors, listener }
-  let partial = createPartial(UNWATCH, payload)
-  return listener ? partial(listener) : partial
-}
-
-function createPartial(type, payload) {
-  return (specifiers, listener, compare = defaultCompare) => {
-    if (typeof specifiers === 'function') {
-      listener = specifiers
-      specifiers = undefined
-    }
-    payload = { ...payload, specifiers, listener }
-    return { type, payload }
+  return {
+    type: UNWATCH,
+    payload: { selectors, listener }
   }
 }
 
-export function createEagle(selectorTransform = defaultTransform) {
+export function createEagle() {
   const subscribers = createCollection()
-
-  function mapSelectors(selectors, specifiers, fn) {
-    selectors = [].concat(selectors)
-    return selectors.map((selector, index) => {
-      selector = selectorTransform(selector, specifiers, index)
-      return fn(selector)
-    })
-  }
 
   return store => nextDispatch => action => {
     switch (action.type) {
       case WATCH: {
-        let { selectors, specifiers, listener, compare } = action.payload
-        return mapSelectors(selectors, specifiers, selector =>
+        let { selectors, listener, compare } = action.payload
+        selectors = [].concat(selectors)
+        return selectors.map(selector =>
           subscribers.getOrInsert({ selector, listener, compare })
         )
       }
       case UNWATCH: {
-        let { selectors, specifiers, listener } = action.payload
-        return mapSelectors(selectors, specifiers, selector =>
+        let { selectors, listener } = action.payload
+        selectors = [].concat(selectors)
+        return selectors.map(selector =>
           subscribers.remove({ selector, listener })
         )
       }

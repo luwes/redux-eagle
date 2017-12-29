@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/luwes/redux-eagle.svg?branch=master)](https://travis-ci.org/luwes/redux-eagle)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-Redux middleware to watch state changes using transformable selectors.
+Redux middleware to watch state changes.
 
 ## Install
 
@@ -13,20 +13,18 @@ npm i --save redux-eagle
 
 ## API
 
-`createEagle([selectorTransform])`
+`createEagle()`
 
-**selectorTransform = (selector, specifier, index) => (state) => selector**  
-Transform the selector that is input in `watch` and `unwatch`.  
-*Default: identity*
+Creates the middleware function.
 
-`watch(selector, [listener], [compare])`  
-`unwatch(selector, [listener])`
+`watch(selectors, [listener], [compare])`  
+`unwatch(selectors, [listener])`
 
-**selector**  
-Can be of any type as long as the result after the selector transform is a `function` that selects a slice of the state. For example a dot path.
+**selectors**  
+A function or an array of functions that select a slice of state.
 
 **listener**  
-Must be a `function`. The listener gets called when the selected state changes.
+Must be a function. The listener gets called when the selected state changes.
 
 **compare**  
 A function that compares the old and new selected state.  
@@ -51,48 +49,4 @@ function catchMouse(livingMouse, deadMouse, state) {
 }
 
 store.dispatch(mouseEnterDesert())
-```
-
-##### example w/ transformed selector
-
-```js
-import { createStore, applyMiddleware, bindActionCreators } from 'redux'
-import { createEagle, watch } from 'redux-eagle'
-
-const objectpath = (path) => (state) => get(state, path)
-const eagle = createEagle(objectpath)
-const store = createStore(reducer, applyMiddleware(eagle))
-const actions = bindActionCreators({ watch, mouseEnterDesert }, store.dispatch)
-
-actions.watch('desert.mice', catchMouse)
-
-function catchMouse(livingMouse, deadMouse, state) {
-  console.log(livingMouse)
-}
-
-actions.mouseEnterDesert()
-```
-
-##### example w/ partially applied watch and transformed selector
-
-```js
-import { createStore, applyMiddleware, bindActionCreators } from 'redux'
-import { createEagle, watch } from 'redux-eagle'
-
-const objectpath = (path, specifier) => {
-  return state => get(state, `${path}.${specifier}`)
-}
-
-const eagle = createEagle(objectpath)
-const store = createStore(reducer, applyMiddleware(eagle))
-const desertWatch = watch('desert')
-const actions = bindActionCreators({ desertWatch, mouseEnterDesert }, store.dispatch)
-
-actions.desertWatch('mice', catchMouse)
-
-function catchMouse(livingMouse, deadMouse, state) {
-  console.log(livingMouse)
-}
-
-actions.mouseEnterDesert()
 ```

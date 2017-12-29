@@ -1,7 +1,7 @@
-import { identity, get } from 'lodash'
-import { createStore, applyMiddleware, bindActionCreators } from 'redux'
+import { identity } from 'lodash'
+import { createStore, applyMiddleware } from 'redux'
 import { createEagle, watch, unwatch } from '../'
-import { addTodo, play, ended } from './helpers/actionCreators'
+import { addTodo, play } from './helpers/actionCreators'
 import * as reducers from './helpers/reducers'
 
 describe('Index', () => {
@@ -42,54 +42,6 @@ describe('Index', () => {
       store.dispatch(unwatch(identity, listener))
       store.dispatch(addTodo('foo'))
       expect(listener.mock.calls.length).toBe(0)
-    })
-
-    it('transforms the selector and fires on changes', () => {
-      const objectpath = path => state => get(state, path)
-      const eagle = createEagle(objectpath)
-      const store = createStore(reducers.player, applyMiddleware(eagle))
-      const actions = bindActionCreators({ watch, play }, store.dispatch)
-
-      const listener = jest.fn()
-      actions.watch('ui.video.paused', listener)
-      actions.play()
-      expect(listener.mock.calls.length).toBe(1)
-    })
-
-    it('unwatch removes the transformed selector', () => {
-      const objectpath = path => state => get(state, path)
-      const eagle = createEagle(objectpath)
-      const store = createStore(reducers.player, applyMiddleware(eagle))
-      const actions = bindActionCreators(
-        { watch, unwatch, play },
-        store.dispatch
-      )
-
-      const listener = jest.fn()
-      actions.watch('ui.video.paused', listener)
-      actions.unwatch('ui.video.paused', listener)
-      actions.play()
-      expect(listener.mock.calls.length).toBe(0)
-    })
-
-    it('partially applies watch and provides a specifier to selector transform', () => {
-      const objectpath = (path, specifier) => {
-        return state => get(state, `${path}.${specifier}`)
-      }
-
-      const eagle = createEagle(objectpath)
-      const store = createStore(reducers.player, applyMiddleware(eagle))
-      const videoWatch = watch('ui.video')
-      const actions = bindActionCreators(
-        { videoWatch, play, ended },
-        store.dispatch
-      )
-
-      const listener = jest.fn()
-      actions.videoWatch('paused', listener)
-      actions.play()
-      actions.ended()
-      expect(listener.mock.calls.length).toBe(2)
     })
   })
 })

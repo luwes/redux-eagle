@@ -9,16 +9,6 @@ export function defaultCompare(a, b) {
 }
 
 /**
- * Default selector transform function. This can be useful to convert string
- * based selectors into selector functions.
- * @param  {*} selector
- * @return {Function}
- */
-export function defaultTransform(selector) {
-  return selector
-}
-
-/**
  * Creates a function that performs a partial deep comparison between a given
  * object and `source`, returning `true` if the given object has equivalent
  * property values, else `false`.
