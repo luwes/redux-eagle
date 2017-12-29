@@ -17,7 +17,7 @@ npm i --save redux-eagle
 
 Creates the middleware function.
 
-`watch(selectors, [listener], [compare])`  
+`watch(selectors, listener, [compare])`  
 `unwatch(selectors, [listener])`
 
 **selectors**  
