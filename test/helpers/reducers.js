@@ -1,4 +1,4 @@
-import { ADD_TODO, PLAY } from './actionTypes'
+import { ADD_TODO, PLAY, ENDED } from './actionTypes'
 
 function id(state = []) {
   return (
@@ -34,7 +34,9 @@ function ui(state = {}, action) {
 }
 
 const videoInitialState = {
-  paused: true
+  paused: true,
+  playInitiated: false,
+  ended: false
 }
 
 function video(state = videoInitialState, action) {
@@ -42,7 +44,16 @@ function video(state = videoInitialState, action) {
     case PLAY:
       return {
         ...state,
-        paused: false
+        paused: false,
+        playInitiated: true,
+        ended: false
+      }
+    case ENDED:
+      return {
+        ...state,
+        paused: true,
+        playInitiated: true,
+        ended: true
       }
     default:
       return state
