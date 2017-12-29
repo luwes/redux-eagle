@@ -11,6 +11,28 @@ Redux middleware to watch state changes using transformable selectors.
 npm i --save redux-eagle
 ```
 
+## API
+
+`createEagle([selectorTransform])`
+
+**selectorTransform = (selector, specifier, index) => (state) => selector**  
+Transform the selector that is input in `watch` and `unwatch`.  
+*Default: identity*
+
+`watch(selector, [listener], [compare])`  
+`unwatch(selector, [listener])`
+
+**selector**  
+Can be of any type as long as the result after the selector transform is a `function` that selects a slice of the state. For example a dot path.
+
+**listener**  
+Must be a `function`. The listener gets called when the selected state changes.
+
+**compare**  
+A function that compares the old and new selected state.  
+*Default: `===`*
+
+
 ## Example
 
 ##### basic example
